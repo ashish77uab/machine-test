@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useEffect, useMemo } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setProduct } from '../redux/features/productSlice'
+import { setProduct, updateSearchedProduct } from '../redux/features/productSlice'
 import Product from '../components/Product'
 
 const ProductPage = () => {
@@ -16,22 +16,25 @@ const ProductPage = () => {
   const [productLoading, setProductLoading] = useState(false)
   const [search, setSearch] = useState('')
   const handleSearch = (e) => {
-
-
-    const { value } = e.target
     setSearch(e.target.value)
-
-
     const filterProducts = products.filter(product => {
-
-      return String(product.title).toLowerCase().includes(String(value).toLowerCase())
+      return String(product.title).toLowerCase().includes(String(e.target.value).toLowerCase())
     }
 
     );
     dispatch(setProduct(filterProducts));
     setPage(1)
-
   }
+  // const handleSearchClick = () => {
+  //   const filterProducts = products.filter(product => {
+  //     return String(product.title).toLowerCase().includes(String(search).toLowerCase())
+  //   }
+
+  //   );
+  //   dispatch(setProduct(filterProducts));
+  //   setPage(1)
+
+  // }
 
   const getProducts = async () => {
     setProductLoading(true)
@@ -48,8 +51,10 @@ const ProductPage = () => {
     }
   }
   useEffect(() => {
-    getProducts()
-  }, [])
+    if (search === '') {
+      getProducts()
+    }
+  }, [search])
 
 
   const renderProducts = useMemo(() =>
@@ -61,14 +66,15 @@ const ProductPage = () => {
 
   return (
     <div>
-      <div className=' max-w-[800px] mx-auto mb-8'>
+      <div className=' max-w-[800px] mx-auto mb-8 flex gap-4 items-center'>
         <input
-          className='py-2 px-8 border border-zinc-200 rounded-lg '
+          className='py-2 px-8 border border-zinc-200 rounded-lg flex-grow '
           placeholder='search product by title'
-          type="text"
+          type="search"
           value={search}
           onChange={handleSearch}
         />
+        {/* <button onClick={handleSearchClick} className='px-10 py-2 rounded-lg text-white bg-blue-500'>Search</button> */}
       </div>
 
       <div className="grid grid-cols-4 gap-4">

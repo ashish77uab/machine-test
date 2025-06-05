@@ -1,6 +1,10 @@
 First clone it in local
+
 Run npm i in given repo
+
+
 Start using npm run dev
+
 
 
 Shown products
